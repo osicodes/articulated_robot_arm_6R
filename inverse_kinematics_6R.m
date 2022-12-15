@@ -92,9 +92,12 @@ num1 = a2^2 + s^2 - d4^2;
 den1 = 2 * a2 * s;
 nd1 = round(num1/den1,4);
 beta1 = acos(nd1);
-% beta2 = -acos(nd1);
+beta2 = -acos(nd1);
 
-theta2 = pi/2 - alpha - beta1; % OR theta2 = pi/2 - alpha - beta2
+% theta2 = pi - alpha - beta1; 
+% theta2 = pi/2 - alpha - beta1; %-original 
+theta2 = alpha + beta1 - pi/2;
+% theta2 = pi/2 - alpha - beta2;
 
 %--------theta 3------------
 num2 = a2^2 + d4^2 - s^2;
@@ -103,13 +106,16 @@ nd2 = round(num2/den2,4);
 gamma1 = acos(nd2);
 gamma2 = -acos(nd2);
 
-theta3 = pi - gamma1; % OR theta3 = pi/2 - gamma2
+% theta3 = pi - gamma1;
+% theta3 = pi/2 - gamma1; %original 
+theta3 = gamma1 - pi/2;
+% theta3 = pi/2 - gamma2
 %--------------------------------
 
 
-A1 = dh(theta1,d1,a1,-pi/2);
-A2 = dh(theta2-pi/2,0,a2,0);
-A3 = dh(theta3-pi/2,0,0,-pi/2);
+A1 = dh(theta1,d1,a1,pi/2);
+A2 = dh(theta2+pi/2,0,a2,0);
+A3 = dh(theta3,0,0,pi/2);
 
 T03 = A1*A2*A3;
 
@@ -122,18 +128,21 @@ R36 = trns_R03*T06(1:3,1:3);
 %--------theta 4------------
 r23 = round(R36(2,3),4);
 r13 = round(R36(1,3),4);
-theta4 = atan2(-r23,-r13);
+% theta4 = atan2(-r23,-r13); %original
+theta4 = atan2(r23,r13);
 
 %--------theta 5------------
 %
-theta5 = round(acos(R36(3,3)),4); % OR theta5 = -acos(R36(3,3))
-%theta5 = atan2(sqrt(r13^2+r23^2),R36(3,3));
+theta5 = round(acos(R36(3,3)),4); %original
+% theta5 = round(-acos(R36(3,3)),4); 
+% theta5 = atan2(sqrt(r13^2+r23^2),R36(3,3));
 
 %--------theta 6------------
 r32 = round(R36(3,2),4);
 r31 = round(R36(3,1),4);
 %theta6 = atan2(-R36(3,2),R36(3,1));
-theta6 = atan2(-r32,r31);
+% theta6 = atan2(-r32,r31); %original
+theta6 = atan2(r32,-r31);
 %--------------------------------
 
 trd = [theta1,theta2,theta3,theta4,theta5,theta6];
