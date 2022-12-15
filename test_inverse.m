@@ -92,4 +92,4 @@ theta5 = atan2( sqrt(new__trans_R36(1,3)^2 + new__trans_R36(2,3)^2),new__trans_R
 %theta5 = -acos(new__trans_R36(3,3));
 theta6 = atan2(-new__trans_R36(3,2),new__trans_R36(3,1));
 
-myTheta = [theta1,theta2,theta3,theta4,theta5,theta6]
+myTheta = [theta1,theta2,theta3,theta4,theta5,theta6];
