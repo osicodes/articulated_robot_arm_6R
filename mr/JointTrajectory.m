@@ -35,7 +35,9 @@ function traj = JointTrajectory(thetastart, thetaend, Tf, N, method)
 timegap = Tf / (N - 1);
 traj = zeros(size(thetastart, 1), N);
 for i = 1: N
-    if method == 3
+    if method == 1
+        s = LinearTimeScaling(Tf,timegap * (i - 1));
+    elseif method == 3
         s = CubicTimeScaling(Tf, timegap * (i - 1));
     else
         s = QuinticTimeScaling(Tf, timegap * (i - 1));

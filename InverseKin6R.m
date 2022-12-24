@@ -16,9 +16,9 @@ tg_T = r_EULER_T(tg);
 
 T06 = inv(wf_T)*tg_T*inv(tf_T);
 
-X = fprintf('T06 is');
-disp(X);
-disp(T06);
+% X = fprintf('T06 is');
+% disp(X);
+% disp(T06);
 
 P06=T06(1:3,4);
 %R06 = r_EULER(tg(4),tg(5),tg(6));
@@ -26,9 +26,9 @@ P06=T06(1:3,4);
 % % P05 = P06 - d6*R06*[0;0;1];
 P05 = P06 - d6*T06(1:3,3);
 
-X = fprintf('P05 is');
-disp(X);
-disp(P05);
+% X = fprintf('P05 is');
+% disp(X);
+% disp(P05);
 
 x = P05(1,1);
 y = P05(2,1);
@@ -99,9 +99,9 @@ theta4 = atan2(r23,r13);
 
 %--------theta 5------------
 %
-theta5 = round(acos(R36(3,3)),4); %original
+% theta5 = round(acos(R36(3,3)),4); %original
 % theta5 = round(-acos(R36(3,3)),4); 
-% theta5 = atan2(sqrt(r13^2+r23^2),R36(3,3));
+theta5 = atan2(sqrt(r13^2+r23^2),R36(3,3));
 
 %--------theta 6------------
 r32 = round(R36(3,2),4);

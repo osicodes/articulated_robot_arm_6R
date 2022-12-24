@@ -15,5 +15,9 @@ function s = CubicTimeScaling(Tf, t)
 % s =
 %    0.2160
 
-s = 3 * (t / Tf) ^ 2 - 2 * (t / Tf) ^ 3;
+% s = 3 * (t / Tf) ^ 2 - 2 * (t / Tf) ^ 3;
+
+% Alternative (trigonometric)
+s = (1-cos(pi*t / Tf))/2;
+% Reference: http://www.diag.uniroma1.it//~deluca/rob1_en/13_TrajectoryPlanningJoints.pdf
 end

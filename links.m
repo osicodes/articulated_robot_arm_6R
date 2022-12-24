@@ -50,8 +50,8 @@ A5 = dh(q(5),0,0,pi/2);
 A6 = dh(q(6),d6,0,0);
 
 % T06 = simplify(A1*A2*A3*A4*A5*A6)
-T06 = A1*A2*A3*A4*A5*A6
-[phi,th,psi] = inv_EULER(T06)
+T06 = A1*A2*A3*A4*A5*A6;
+[phi,th,psi] = inv_EULER(T06);
 
 % T03 = A1*A2*A3;
 % T36 = A4*A5*A6;
@@ -64,4 +64,4 @@ T06 = A1*A2*A3*A4*A5*A6
 % R06n = r_RPY(a,o,n)
 % R36n = simplify(transpose(R03) * R06n)
 
-filter_time = 0.5;
+filter_time = 1.5;
