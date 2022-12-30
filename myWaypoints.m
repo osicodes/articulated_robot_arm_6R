@@ -30,12 +30,14 @@ Xstart = [ 0.0000   -0.0000    1.0000 187.8553
    -0.0000   -1.0000         0      0
     1.0000   -0.0000   -0.0000 155.3553
          0         0         0 1.0000];
-Xend = [1.0000    3.1416   -0.0000   80.3521;
-   -0.0000   -1.0000   -0.7854   0;%50.9937;
-   -1.5708    0.7854   -1.0000  80.8569;
+
+Xend = [0.4505   -0.2169   -0.8660   80.3521;
+       -0.4339   -0.9010    0.0000   50.9937;
+       -0.7803    0.3758   -0.5000  80.8569;
          0         0         0    1.0000];
+     
 Tf = 5;
-N = 80;
+N = 200;
 method = 3;
 trajList = [0;0;0;0;0;0];
 cir = [0;0;0];
@@ -69,7 +71,7 @@ for i = 1: N
 end
 jointList; %angles for each joint
 trajList;
-cir
+cir;
 
 
 
@@ -85,28 +87,33 @@ cir
 % Xcir = 160;
 % Ycir = 0;
 % Tf = 5;
-% N = 4;
+% N = 100;
 % r = 20;
 % 
 % trajList = [0;0;0;0;0;0];
-% see = zeros(N,6);  
+% cir = [0;0;0];
+% jointList = zeros(6,N); 
 % traj = CircularTrajectory(Xcir, Ycir, Tf, N, r, Rstart, Rend);
 % 
 % for i = 1: N
 %     [phi,th,psi] = inv_EULER(traj{1,i});
+%     cir(i,1) = traj{1,i}(1,4);
+%     cir(i,2) = traj{1,i}(2,4);
+%     cir(i,3) = traj{1,i}(3,4);
 %     trajList(1,i) = traj{1,i}(1,4);
 %     trajList(2,i) = traj{1,i}(2,4);
 %     trajList(3,i) = traj{1,i}(3,4);
 %     trajList(4,i) = phi;
 %     trajList(5,i) = th;
 %     trajList(6,i) = psi;
-%     trd = InverseKin6R(traj{1,i}(1,4),traj{1,i}(2,4),traj{1,i}(3,4),phi,th,psi);
+%     q = InverseKin6R(traj{1,i}(1,4),traj{1,i}(2,4),traj{1,i}(3,4),phi,th,psi);
 %     for j = 1:6
-%         see(i,j) = trd(1,j);
+%         jointList(j,i) = q(1,j);
 %     end
 % end
 % see; %angles for each joint
-% trajList
+% jointList;
+% cir
 
 
 %-------------------joint traj----------------------
@@ -116,10 +123,10 @@ cir
 % X3 = [162.6345 0 8.7132 0 3.1416 3.1416];
 % 
 % [j1, c1] = jointFunc(X1,X2);
-% % [j2, c2] = jointFunc(X2,X3);
+% [j2, c2] = jointFunc(X2,X3);
 % 
-% jointList = [j1];% j2(:,2:end)]; 
-% cir = [c1];% c2(2:end,:)];
+% jointList = [j1 j2(:,2:end)]; 
+% cir = [c1; c2(2:end,:)];
 % 
 % function [jointLis, ci]= jointFunc(Xstart, Xend)
 % tip=42.5;
@@ -131,16 +138,16 @@ cir
 % % thetastart = [0; 0; 0; 0; 0; 0];
 % % thetaend = [0; -pi/4; 0; 0; -pi/4; 0];
 % Tf = 4;
-% N = 8;
-% method = 5;
+% N = 100;
+% method = 1;
 % ci = [0;0;0];
 % 
-% vmax = 2;%0.25e-4;
+% vmax = 5;%0.25e-4;
 % amax = 0.5;%0.75e-10;
 % i = Xstart(1:3);
 % f = Xend(1:3);
 % eucPathLength = norm(f - i);
-% traj = JointTrajectory(thetastart, thetaend, Tf, N, method);
+% traj = JointTrajectory(thetastart, thetaend, Tf, N, method, vmax, amax, eucPathLength);
 % % traj = Trapezoidal_Trajectory(thetastart, thetaend, vmax, amax, eucPathLength, N);
 % jointLis = traj';
 % q=traj;

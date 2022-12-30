@@ -46,11 +46,41 @@ function traj = CircularTrajectory(Xcir, Ycir, Tf, N, r, Rstart, Rend)
 
 timegap = Tf / (N - 1);
 traj = cell(1, N);
+
+[Rs_phi,Rs_th,Rs_psi] = inv_EULER(Rstart); %ZYZ orientation
+[Re_phi,Re_th,Re_psi] = inv_EULER(Rend);%ZYZ orientation
+
+Rs = [Rs_phi,Rs_th,Rs_psi]';%ZYZ orientation
+Re = [Re_phi,Re_th,Re_psi]';%ZYZ orientation
+
 for i = 1: N
     s = CircularTimeScaling(Tf,timegap * (i - 1));
     
-    traj{i} ...
-    = [Rstart * MatrixExp3(MatrixLog3(Rstart' * Rend) * s), ...
-       [r*cos(2*pi*s)+Xcir;r*sin(2*pi*s)+Ycir;100]; 0, 0, 0, 1];
+%     Or = Rs + s * (Re - Rs);
+    
+    center = [Xcir;Ycir;100];
+    p = [r*cos(2*pi*s);r*sin(2*pi*s);0];
+    ra = [1 0 0;0 1 0;0 0 1];
+
+%     traj{i} ...
+%     = [r_EULER(Or(1),Or(2),Or(3)), ...
+%        center + ra*p; 0, 0, 0, 1];
+   
+   %----------Angle_axis orientation----------
+   Rse = Rstart' * Rend;
+   angle = acos((Rse(1,1)+Rse(2,2)+Rse(3,3)-1)/2.0);
+   if (sin(angle) ~= 0)
+       axis_r = 1/(2*sin(angle))*[Rse(3,2)-Rse(2,3);Rse(1,3)-Rse(3,1);Rse(2,1)-Rse(1,2)];
+   else
+       X = fprintf('Sine theta at the denominator is zero');
+       disp(X);
+       exit
+   end
+   Rot_r_th = r_ANGLE_AXIS(axis_r,s*angle);
+   
+   traj{i} ...
+    = [Rstart*Rot_r_th, ...
+       center + ra*p; 0, 0, 0, 1];
+   %------------------------------------------
 end
 end

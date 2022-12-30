@@ -1,4 +1,4 @@
-function traj = JointTrajectory(thetastart, thetaend, Tf, N, method)
+function traj = JointTrajectory(thetastart, thetaend, Tf, N, method, varargin)
 % *** CHAPTER 9: TRAJECTORY GENERATION ***
 % Takes thetastart: The initial joint variables,
 %       thetaend: The final joint variables,
@@ -32,15 +32,38 @@ function traj = JointTrajectory(thetastart, thetaend, Tf, N, method)
 %   1.1792   0.4480   0.5376   1.0896   1.8960   1.8128   0.8064   1.0000
 %   1.2000   0.5000   0.6000   1.1000   2.0000   2.0000   0.9000   1.0000
 
+if nargin > 5
+    if numel(varargin) == 3
+        vmax = varargin{1};
+        amax = varargin{2};
+        eucPathLength = varargin{3};
+    else
+        msg = 'Input the velocity, acceleration and euclidean length between points';
+        error(msg);
+    end
+end
+
 timegap = Tf / (N - 1);
 traj = zeros(size(thetastart, 1), N);
 for i = 1: N
-    if method == 1
-        s = LinearTimeScaling(Tf,timegap * (i - 1));
-    elseif method == 3
-        s = CubicTimeScaling(Tf, timegap * (i - 1));
-    else
-        s = QuinticTimeScaling(Tf, timegap * (i - 1));
+    switch(method)
+        case 1
+            s = LinearTimeScaling(Tf,timegap * (i - 1));
+        case 2
+            if numel(varargin) == 3
+                Totaltime = (eucPathLength*amax+vmax^2)/(amax*vmax);
+                deltaTime = Totaltime / (N - 1);
+                s = TrapezoidalTimeScaling(deltaTime * (i - 1), vmax, amax, eucPathLength);
+            else
+                msg = 'Input the velocity, acceleration and euclidean length between points for method = 2';
+                error(msg);
+            end
+        case 3
+            s = CubicTimeScaling(Tf, timegap * (i - 1));
+        case 5
+            s = QuinticTimeScaling(Tf, timegap * (i - 1));
+        otherwise
+            error('Selected method should be 1, 2, 3 or 5');
     end
     traj(:, i) = thetastart + s * (thetaend - thetastart);
 end

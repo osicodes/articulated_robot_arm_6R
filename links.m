@@ -64,4 +64,4 @@ T06 = A1*A2*A3*A4*A5*A6;
 % R06n = r_RPY(a,o,n)
 % R36n = simplify(transpose(R03) * R06n)
 
-filter_time = 1.5;
+filter_time = 1;
