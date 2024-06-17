@@ -1,4 +1,4 @@
-function inverse_kinematics_6R(block)
+function inverse_kinematics_6R_Previous(block)
 
 
 setup(block);

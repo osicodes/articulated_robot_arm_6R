@@ -1,4 +1,9 @@
-function trd = InverseKin6R(x,y,z,phi,th,psi)
+% 
+% INVERSE KINEMATICS
+% analytical
+% 
+
+function trd = myInverseKin6RAnalytical(x,y,z,phi,th,psi)
 
 tip=42.5;
 d1=75.3553; a1=35.3553; a2=80; d4=100; d6 = 10+tip;
