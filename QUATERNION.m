@@ -1,5 +1,6 @@
-function q = inv_QUATERNION(R)
-% Takes the euler angles and returns the rotation matrix.
+function q = QUATERNION(R)
+% Takes the rotation matrix and returns the quaternion.
+% 
 % Reference: 
 % [1] A Survey on the Computation of Quaternions from Rotation Matrices
 % (http://www.iri.upc.edu/files/scidoc/2083-A-Survey-on-the-Computation-
@@ -15,7 +16,7 @@ function q = inv_QUATERNION(R)
 % R = [1.0000    0.0000    0.0000
 %     0.0000   -1.0000         0
 %     0.0000    0.0000   -1.0000]
-% q = inv_QUATERNION(R)
+% q = QUATERNION(R)
 % 
 % Output:
 % q = []

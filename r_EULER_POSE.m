@@ -1,11 +1,11 @@
-function T = r_EULER_T(pos)
-% Takes a pose and returns the transformation matrix (with euler rotation
+function T = r_EULER_POSE(pos)
+% Takes a pose (x y z phi th psi) and returns the transformation matrix (with euler rotation
 % matrix).
 % Example Input:
 % 
 % clear; clc;
 % pose = [10 0 25 0 pi 0];
-% T = r_EULER_T(pose);
+% T = r_EULER_POSE(pose);
 % 
 % Output:
 % T =

@@ -3,10 +3,18 @@
 % analytical
 % 
 
-function trd = myInverseKin6RAnalytical(x,y,z,phi,th,psi)
+function angles = myInverseKin6RAnalytical(x,y,z,phi,th,psi)
 
 tip=42.5;
 d1=75.3553; a1=35.3553; a2=80; d4=100; d6 = 10+tip;
+
+%%
+% w_t_T = world to task transformation
+% w_b_T = world to robot base transformation
+% b_e_T = base to end effector transformation
+% e_t_T = end effector to task transformation
+% 
+% w_t_T = 
 
 % Work frame
 wf = [0 0 0 0 0 0];
@@ -116,8 +124,10 @@ r31 = round(R36(3,1),4);
 theta6 = atan2(r32,-r31);
 %--------------------------------
 
-trd = [theta1,theta2,theta3,theta4,theta5,theta6];
-tdg = [theta1,theta2,theta3,theta4,theta5,theta6] * 180/pi;
+angles_rad = [theta1,theta2,theta3,theta4,theta5,theta6];
+angles_deg = [theta1,theta2,theta3,theta4,theta5,theta6] * 180/pi;
+
+angles = angles_rad; % angles_deg
 
 
 end

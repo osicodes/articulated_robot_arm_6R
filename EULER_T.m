@@ -1,13 +1,13 @@
-function [x,y,z,phi,th,psi] = inv_EULER_T(M)
+function [x,y,z,phi,th,psi] = EULER_T(M)
 % Takes transformation matrix and returns the euler angles.
 % Example Input:
 % 
 % clear; clc;
-% T = [ 0.0000   -0.0000    1.0000 187.8553
+% M = [ 0.0000   -0.0000    1.0000 187.8553
 %      -0.0000   -1.0000         0        0
 %       1.0000   -0.0000   -0.0000 155.3553
 %            0         0         0   1.0000];
-% [x,y,z,phi,th,psi] = inv_EULER(T);
+% [x,y,z,phi,th,psi] = inv_EULER(M);
 % 
 % Output:
 % phi = 0
