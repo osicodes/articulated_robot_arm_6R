@@ -12,7 +12,15 @@ d1=75.3553; a1=35.3553; a2=80; d4=100; d6 = 10+tip;
 % th1=0.1061;th2=0.8033;th3=-0.5191;th4=1.5708;th5=0.2843;th6=-1.4647;
 %q = [th1,th2,th3,th4,th5,th6]; 
 
-qr = [0 0 0 0 0 0]; 
+% Joint limits
+% q1 = -90 to 90 -- pi/2
+% q2 = -60 to 60 -- pi/3
+% q3 = -60 to 90 
+% q4 = -180 to 180
+% q5 = -60 to 60 % (180 or -180 will cause singularity)
+% q6 = -180 to 180
+
+qr = [pi/2 0 pi/2 -pi -pi/2 0]; 
 
 % home_pos = [187.8553; 0; 155.3553; 0; 1.5708; 3.1416]
 kk = [80.3521; 50.9937; 180.8569; -1.5708; 2.4758; 0.3082];
@@ -22,26 +30,6 @@ kk = [80.3521; 50.9937; 180.8569; -1.5708; 2.4758; 0.3082];
 q = qr;
 % qr = q * -1;
 
-% A1 = dh(q(1),d1,a1,pi/2);
-% A2 = dh(q(2)+pi/4,0,a2,0);
-% A3 = dh(q(3)+pi/2,0,0,pi/2);
-% A4 = dh(q(4),d4,0,-pi/2);
-% A5 = dh(q(5),0,0,pi/2);
-% A6 = dh(q(6),d6,0,0);
-
-% A1 = dh(q(1),d1,a1,-pi/2);
-% A2 = dh(q(2)-pi/2,0,a2,0);
-% A3 = dh(q(3),0,0,-pi/2);
-% A4 = dh(q(4),d4,0,pi/2);
-% A5 = dh(q(5),0,0,-pi/2);
-% A6 = dh(q(6),d6,0,0);
-
-% A1 = dh(q(1),d1,a1,-pi/2);
-% A2 = dh(q(2)-pi/2,0,a2,0);
-% A3 = dh(q(3)-pi/2,0,0,-pi/2);
-% A4 = dh(q(4),d4,0,pi/2);
-% A5 = dh(q(5),0,0,-pi/2);
-% A6 = dh(q(6),d6,0,0);
 
 %CCW is +ve
 A1 = dh(q(1),d1,a1,pi/2);
@@ -80,11 +68,11 @@ y = T06(2,4);
 z = T06(3,4);
 positions = myInverseKin6RAnalytical_EULER(x,y,z,phi,th,psi)'
 
-qw = quaternion(1);
-qx = quaternion(2);
-qy = quaternion(3);
-qz = quaternion(4);
-positions_quat = myInverseKin6RAnalytical_QUATERNION(x,y,z,qw,qx,qy,qz)';
+% qw = quaternion(1);
+% qx = quaternion(2);
+% qy = quaternion(3);
+% qz = quaternion(4);
+% positions_quat = myInverseKin6RAnalytical_QUATERNION(x,y,z,qw,qx,qy,qz)';
 
 
 
