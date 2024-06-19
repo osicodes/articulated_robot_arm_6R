@@ -23,6 +23,7 @@ sw(:,4) = [1 0 0];
 sw(:,5) = [0 -1 0];
 sw(:,6) = [1 0 0];
 
+% sv is linear velocity
 sv = zeros(3,6);
 for i = 1:6
     sv(:,i) = Vector3Cross(-1*sw(:,i),pa(:,i));
@@ -37,7 +38,8 @@ M = [0 0 1 a1+d4+d6;
 
 % syms th1 th2 th3 th4 th5 th6
 % qr = [th1; th2; th3; th4; th5; th6];
-qr = [0; 0; 0; 0; 0; 0];
+% qr = [0; 0; 0; 0; 0; 0];
+qr = [pi/2 pi/3 pi/2 pi/3 -pi/2 0]';
 
 z = FKinSpace(M, s, qr)
 
