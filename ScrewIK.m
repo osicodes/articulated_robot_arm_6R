@@ -36,7 +36,7 @@ end
 s = [sw;sv];
 
 % qr = [0; 0; 0; 0; 0; 0];
-qr = [0 0 -pi/3 0 pi/6 0]';
+qr = [pi/3 -pi/6 -pi/3 0 pi/6 0]';
 
 g0 = [0 0 1 a1+d4+d6;
     0 -1 0 0;
@@ -94,6 +94,7 @@ theta1_d = theta1 * 180/pi
 % Using subproblem 3
 % --------------------------------
 
+% ----------theta3----------------
 % Since position of q2 is affected by theta1 (rotation about z),we
 % apply rotation matrix Rot(z,theta1)
 % Rot(z,theta1) = [cos(theta1) -sin(theta1) 0]
@@ -103,10 +104,10 @@ rot_z = [cos(theta1) -sin(theta1) 0;...
     sin(theta1)  cos(theta1) 0;...
     0            0           1]
 
-th3p = home;
-th3q = q2
-th3r = pa(:,3)
-th3omega = sw(:,3);
+th3p = rot_z*home;
+th3q = rot_z*q2
+th3r = rot_z*pa(:,3)
+th3omega = rot_z*sw(:,3);
 
 delta = norm(target - th3q);
 delta_prime_square = delta^2 - norm(th3omega' * (th3p - th3q))^2;
@@ -165,12 +166,12 @@ gst04 = FKinSpace(g04, s_axis, joints)
 P03 = P05 - d4*gst04(1:3,3);
 
 % q7_bar from the article
-q7_bar = [a1+d4 0 d1+a2]';
+q7_bar = target; % i.e. P05
 
-th2p = q7_bar; %q3;
-th2q = P03;
-th2r = pa(:,2);
-th2omega = sw(:,2);
+th2p = rot_z*q3; 
+th2q = P03;  
+th2r = rot_z*pa(:,2);
+th2omega = rot_z*sw(:,2);
 
 th2U = th2p - th2r;
 th2V = th2q - th2r;
@@ -179,6 +180,8 @@ th2V = th2q - th2r;
 % with theta1 between both vectors
 th2u_prime = th2U - th2omega*th2omega'*th2U;
 th2v_prime = th2V - th2omega*th2omega'*th2V;
+
+delta_prime = target - th3q
 
 theta2 = round(atan2(th2omega'*Vector3Cross(th2u_prime,th2v_prime)',...
     th2u_prime'*th2v_prime)*180/pi, 4)
