@@ -55,9 +55,8 @@ q4 = pa(:,4);
 d = [1; 0; 0];
 omega1 = sw(:,1);
 
-q_1 = gst * inv(g0) * q6;
 
-% Remeber, q4, q5, q6 are same points.
+% Remember, q4, q5, q6 are same points.
 % When theta1 is rotated, q6 will never change and rotate by theta1
 % So to get theta1, move from q6 at home position to q6 at target position
 

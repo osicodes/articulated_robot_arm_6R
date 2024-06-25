@@ -1,8 +1,7 @@
 %   Reference: 
-%   [1] Liao Z, Jiang G, Zhao F, Mei X, Yue Y. A novel solution of 
-%       inverse kinematic for 6R robot manipulator with offset joint based 
-%       on screw theory. International Journal of Advanced Robotic Systems. 
-%       2020;17(3). doi:10.1177/1729881420925645
+%   [1] Imporved inverse kinematics Algorithm using Screw theory
+%       for a Six-DOF robot manipulator
+%       https://cyberleninka.org/article/n/690609/viewer
 %   [2] Algorithmic approach to geometric solution of generalized 
 %       Paden–Kahan subproblem and its extension
 %       https://journals.sagepub.com/doi/pdf/10.1177/1729881418755157

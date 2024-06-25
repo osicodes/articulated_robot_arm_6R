@@ -49,7 +49,8 @@ P06=T06(1:3,4);
 % % P05 = P06 - d6*R06*[0;0;1];
 P05 = P06 - d6*T06(1:3,3);
 
-% X = fprintf('P05 is');
+% X = fprintf('P05 is');                                    m
+%         
 % disp(X); 
 % disp(P05);
 
