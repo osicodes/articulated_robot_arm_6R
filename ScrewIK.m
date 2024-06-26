@@ -36,7 +36,8 @@ end
 s = [sw;sv];
 
 % qr = [0; 0; 0; 0; 0; 0];
-qr = [pi/3 -pi/6 -pi/3 0 pi/6 0]';
+% qr = [pi/4 -pi/3 -pi/4 0 pi/6 0]';
+qr = [pi/3 -pi/6 -pi/6 0 0 0]';
 
 g0 = [0 0 1 a1+d4+d6;
     0 -1 0 0;
@@ -45,12 +46,6 @@ g0 = [0 0 1 a1+d4+d6;
 
 gst = FKinSpace(g0, s, qr); % Target pose transformation
 
-Texp1 = revoluteExpMatrix(VecTose3(s(:,1)),th1);
-Texp2 = revoluteExpMatrix(VecTose3(s(:,2)),th2);
-Texp3 = revoluteExpMatrix(VecTose3(s(:,3)),th3);
-Texp4 = revoluteExpMatrix(VecTose3(s(:,4)),th4);
-Texp5 = revoluteExpMatrix(VecTose3(s(:,5)),th5);
-Texp6 = revoluteExpMatrix(VecTose3(s(:,6)),th6);
 
 %% ------------INVERSE----------------
 
@@ -102,11 +97,11 @@ theta1_d = theta1 * 180/pi
 %                 [0            0           1]
 rot_z = [cos(theta1) -sin(theta1) 0;...
     sin(theta1)  cos(theta1) 0;...
-    0            0           1]
+    0            0           1];
 
 th3p = rot_z*home;
-th3q = rot_z*q2
-th3r = rot_z*pa(:,3)
+th3q = rot_z*q2;
+th3r = rot_z*pa(:,3);
 th3omega = rot_z*sw(:,3);
 
 delta = norm(target - th3q);
@@ -135,35 +130,38 @@ theta3 = (theta_not + phi)*180/pi
 % and multiply the column_z-axis orientation with d4, then subtract from
 % P05 to get actual position of P03
 % --------------
-point = zeros(3,6);
-point(:,1) = [0 0 0];
-point(:,2) = [a1 0 d1];
-point(:,3) = [a1 0 d1+a2];
-point(:,4) = [a1+d4 0 d1+a2];
-
-sw_axis = zeros(3,6);
-sw_axis(:,1) = [0 0 1];
-sw_axis(:,2) = [0 -1 0];
-sw_axis(:,3) = [0 -1 0];
-sw_axis(:,4) = [1 0 0];
-
-sv_axis = zeros(3,6);
-for i = 1:6
-    sv_axis(:,i) = Vector3Cross(-1*sw_axis(:,i),point(:,i));
-end
-
-s_axis = [sw_axis;sv_axis];
-
-joints = qr(1:4);
-
-g04 = [0 0 1 a1+d4;
-    0 -1 0 0;
-    1 0 0 d1+a2;
-    0 0 0 1];
-
-gst04 = FKinSpace(g04, s_axis, joints) 
-% --------------
-P03 = P05 - d4*gst04(1:3,3);
+% point = zeros(3,4);
+% point(:,1) = [0 0 0];
+% point(:,2) = [a1 0 d1];
+% point(:,3) = [a1 0 d1+a2];
+% point(:,4) = [a1+d4 0 d1+a2];
+% 
+% sw_axis = zeros(3,4);
+% sw_axis(:,1) = [0 0 1];
+% sw_axis(:,2) = [0 -1 0];
+% sw_axis(:,3) = [0 -1 0];
+% sw_axis(:,4) = [1 0 0];
+% 
+% sv_axis = zeros(3,4);
+% for i = 1:4
+%     sv_axis(:,i) = Vector3Cross(-1*sw_axis(:,i),point(:,i));
+% end
+% 
+% s_axis = [sw_axis;sv_axis];
+% 
+% joints = qr(1:4);
+% 
+% g04 = [0 0 1 a1+d4;
+%     0 -1 0 0;
+%     1 0 0 d1+a2;
+%     0 0 0 1];
+% 
+% 
+% gst04 = FKinSpace(g04, s_axis, joints) 
+% % --------------
+% P03 = P05 - d4*gst04(1:3,3);
+P03_array = gst * InvTransM(g0) * [q3; 1];
+P03 = P03_array(1:3);
 
 % q7_bar from the article
 q7_bar = target; % i.e. P05
@@ -187,3 +185,8 @@ theta2 = round(atan2(th2omega'*Vector3Cross(th2u_prime,th2v_prime)',...
     th2u_prime'*th2v_prime)*180/pi, 4)
 
 gst
+
+
+% ------------------------------------------
+% theta4, 5 and 6
+% ------------------------------------------
