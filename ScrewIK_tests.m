@@ -33,9 +33,24 @@ end
 s = [sw;sv];
 
 % qr = [pi/4; -pi/6; -pi/6];
-qr = [pi/3 -pi/6 -pi/6 0 0 0]';
+qr = [pi/4 -pi/6 pi/4 pi/2 -pi/2 pi/2]';
 
 g0 = [0 0 1 a1+d4+d6;
+    0 -1 0 0;
+    1 0 0 d1+a2;
+    0 0 0 1];
+
+g04 = [0 0 1 a1+d4;
+    0 -1 0 0;
+    1 0 0 d1+a2;
+    0 0 0 1];
+
+g05 = [0 -1  0 a1+d4;
+       0  0 -1 0;
+       1  0  0 d1+a2;
+       0  0  0 1];
+
+g03 = [0 0 1 a1;
     0 -1 0 0;
     1 0 0 d1+a2;
     0 0 0 1];
@@ -60,15 +75,32 @@ exp4 = MatrixExp6(VecTose3(s(:, 4) * qr(4)));
 exp5 = MatrixExp6(VecTose3(s(:, 5) * qr(5)));
 exp6 = MatrixExp6(VecTose3(s(:, 6) * qr(6)));
 
-left = exp1*exp2*exp3*exp4*exp5*exp6 * qout
+left = exp1*exp2*exp3*exp4*exp5*exp6 * q3
 
-right = gst * InvTransM(g0) * qout
-
-g03 = [0 -1  0 a1;
-       0  0 -1 0;
-       1  0  0 d1+a2;
-       0  0  0 1];
-
-t03 = exp1*exp2*g03
+right =  InvTransM(exp3)*gst1 * InvTransM(g0) * q3
 
 
+% left = exp4*exp5*exp6 * qout
+% 
+% right =   InvTransM(exp3) * InvTransM(exp2) * InvTransM(exp1) *...
+%     gst1 * InvTransM(g0) * qout
+
+t2 = exp1*q2;
+t3 = exp1*exp2 * q3;
+t4 = exp1*exp2*exp3*exp4*exp5*exp6 * q4;
+tout = exp1*exp2*exp3*exp4*exp5*exp6 * qout;
+
+point1 = [0; 0; 0];
+point1_int = [0; 0; d1];
+point2 = t2(1:3);
+point3 = t3(1:3);
+point4 = t4(1:3);
+point_end = tout(1:3);
+
+
+x = [point1(1) point1_int(1) point2(1) point3(1) point4(1) point_end(1)];
+y = [point1(2) point1_int(2) point2(2) point3(2) point4(2) point_end(2)];
+z = [point1(3) point1_int(3) point2(3) point3(3) point4(3) point_end(3)];
+
+pl = plot(x,z);
+pl.Marker = '*';
