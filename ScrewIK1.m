@@ -36,8 +36,8 @@ end
 s = [sw;sv];
 
 % qr = [0; 0; 0; 0; 0; 0];
-qr = [theta1 theta2 theta3 theta4 theta5 theta6]';
-% qr = [0 0 0 0 pi/6 0]';
+% qr = [theta1 theta2 theta3 theta4 theta5 theta6]';
+qr = [-pi/3 pi/4 pi/4 pi/3 -pi/2 pi/3]';
 
 g0 = [0 0 1 a1+d4+d6;
     0 -1 0 0;
@@ -84,10 +84,10 @@ th1V = th1q - th1r;
 th1u_prime = th1U - th1omega*th1omega'*th1U;
 th1v_prime = th1V - th1omega*th1omega'*th1V;
 
-theta1 = atan2(th1omega'*Vector3Cross(th1u_prime,th1v_prime)',...
-    th1u_prime'*th1v_prime);
+theta1 = atan((th1omega'*Vector3Cross(th1u_prime,th1v_prime)')/...
+    (th1u_prime'*th1v_prime));
 
-theta1_d = theta1 * 180/pi
+theta1_d = theta1 * 180/pi;
 
 % --------------------------------
 % theta2 and theta3
@@ -129,7 +129,7 @@ phi = acos(phi_num/phi_den);
 
 theta3 = (theta_not + phi);
 
-theta3_d = theta3 *180/pi
+theta3_d = theta3 *180/pi;
 % theta3 = theta_not - phi
 
 
@@ -161,9 +161,8 @@ th2v_prime = th2V - th2omega*th2omega'*th2V;
 theta2 = round(atan2(th2omega'*Vector3Cross(th2u_prime,th2v_prime)',...
     th2u_prime'*th2v_prime), 4);
 
-theta2_d = theta2*180/pi
+theta2_d = theta2*180/pi;
 
-gst
 
 
 % ------------------------------------------
@@ -175,6 +174,7 @@ exp2 = MatrixExp6(VecTose3(s(:,2) * theta2));
 exp3 = MatrixExp6(VecTose3(s(:,3) * theta3));
 
 T03 = exp1*exp2*exp3;
+
 
 q6_T = [a1+d4+d6 0 d1+a2 1]';
 q6_prime = T03 * q6_T;
@@ -223,7 +223,7 @@ z5_prime = z - th5omega*th5omega'*z;
 theta5 = round(atan2(th5omega'*Vector3Cross(th45u_prime,z5_prime)',...
     th45u_prime'*z5_prime), 4);
 
-theta5_d = theta5*180/pi
+theta5_d = theta5*180/pi;
 
 
 % ------------theta4------------
@@ -233,7 +233,7 @@ th45v_prime = th45V - th4omega*th4omega'*th45V;
 theta4 = round(atan2(th4omega'*Vector3Cross(z4_prime,th45v_prime)',...
     z4_prime'*th45v_prime), 4);
 
-theta4_d = theta4*180/pi
+theta4_d = theta4*180/pi;
 
 % ------------theta6--------------
 
@@ -245,14 +245,16 @@ exp3 = MatrixExp6(VecTose3(s(:, 3) * theta3));
 exp4 = MatrixExp6(VecTose3(s(:, 4) * theta4));
 exp5 = MatrixExp6(VecTose3(s(:, 5) * theta5));
 
-th6q = inv(exp5) * inv(exp4) * inv(exp3) * ...
-    inv(exp2) * inv(exp1) * gst * inv(g0) * [th6p; 1];
+T05 = exp1*exp2*exp3*exp4*exp5;
+
+th6q =  inv(exp5) * inv(exp4) * inv(exp3) * ...
+    inv(exp2) * inv(exp1) * gst *  inv(g0) *  [th6p; 1];
 
 r6_T = [pa(:,6); 1];
 r6 = T03 * r6_T;
 
 th6omega_T = [sw(:,6); 0];
-th6omega_R = T03 * th6omega_T;
+th6omega_R = T05 * th6omega_T;
 
 th6r = r6(1:3);
 th6omega = th6omega_R(1:3);
@@ -264,12 +266,12 @@ th6u_prime = th6U - th6omega*th6omega'*th6U;
 th6v_prime = th6V - th6omega*th6omega'*th6V;
 
 
-theta6 = round(atan2(th6omega'*Vector3Cross(th6u_prime,th6v_prime)',...
-    th6u_prime'*th6v_prime), 4);
+theta6 = round(atan2((th6omega'*Vector3Cross(th6u_prime,th6v_prime)'),...
+    (th6u_prime'*th6v_prime)), 4);
 
-theta6_d = theta6*180/pi
+theta6_d = theta6*180/pi;
 
-
+screwPositions = [theta1_d; theta2_d; theta3_d; theta4_d; theta5_d; theta6_d]
 
 
 

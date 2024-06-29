@@ -38,8 +38,20 @@ M = [0 0 1 a1+d4+d6;
 
 % syms th1 th2 th3 th4 th5 th6
 % qr = [th1; th2; th3; th4; th5; th6];
-% qr = [0; 0; 0; 0; 0; 0];
-qr = [pi/2 pi/3 pi/2 pi/3 -pi/2 0]';
+thetalist0 = [0; 0; 0; 0; 0; 0];
+% qr = [pi/2 pi/3 pi/2 pi/3 -pi/2 0]';
 
 z = FKinSpace(M, s, qr)
+
+T = [   -0.0000    0.0000    1.0000   41.8816;
+   -0.8660   -0.5000   -0.0000   18.3916;
+    0.5000   -0.8660   -0.0000  231.9568;
+         0         0         0    1.0000]
+eomg = 0.01;
+ev = 0.001;
+
+
+jointPose = IKinSpace(s, M, T, thetalist0, eomg, ev)*180/pi
+
+
 

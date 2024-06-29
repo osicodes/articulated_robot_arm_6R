@@ -33,7 +33,7 @@ end
 s = [sw;sv];
 
 % qr = [pi/4; -pi/6; -pi/6];
-qr = [0 0 0 0 pi/6 0]';
+qr = [-pi/3 pi/4 pi/4 pi/3 -pi/2 pi/3]';
 
 g0 = [0 0 1 a1+d4+d6;
     0 -1 0 0;

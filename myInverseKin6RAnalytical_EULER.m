@@ -59,10 +59,20 @@ y = P05(2,1);
 z = P05(3,1);
 
 %--------theta 1------------
-theta1 = atan2(y,x);%-atan2(0,sqrt(x^2+y^2));
+theta1 = atan(y/x);%-atan2(0,sqrt(x^2+y^2));
 
 %--------theta 2------------
-r = sqrt(x^2 + y^2) - a1; 
+distanceToPointZero = sqrt(x^2 + y^2);
+
+if (x > 0 && y > 0)
+    r = distanceToPointZero - a1; 
+elseif (x > 0 && y < 0)
+    r = distanceToPointZero - a1;
+elseif (x < 0 && y > 0)
+    r = -1 * (distanceToPointZero + a1);
+elseif (x < 0 && y < 0)
+    r = -1 * (distanceToPointZero + a1);
+end
 
 z_P = z - d1; 
 
@@ -102,7 +112,7 @@ A3 = dh(theta3,0,0,pi/2);
 
 T03 = A1*A2*A3;
 
-R03 = [T03(1:3,1),T03(1:3,2),T03(1:3,3)];
+R03 = T03(1:3,1:3);
 
 trns_R03 = transpose(R03);
 
