@@ -33,7 +33,7 @@ end
 s = [sw;sv];
 
 % qr = [pi/4; -pi/6; -pi/6];
-qr = [pi/4 -pi/6 pi/4 pi/2 -pi/2 pi/2]';
+qr = [0 0 0 0 pi/6 0]';
 
 g0 = [0 0 1 a1+d4+d6;
     0 -1 0 0;
@@ -66,6 +66,7 @@ q3 = [a1 0 d1+a2 1]';
 q4 = [a1+d4 0 d1+a2 1]';
 
 qout = [a1+d4+d6 0 d1+a2 1]';
+qend = gst1(1:4,4);
              
 
 exp1 = MatrixExp6(VecTose3(s(:, 1) * qr(1)));
@@ -75,9 +76,10 @@ exp4 = MatrixExp6(VecTose3(s(:, 4) * qr(4)));
 exp5 = MatrixExp6(VecTose3(s(:, 5) * qr(5)));
 exp6 = MatrixExp6(VecTose3(s(:, 6) * qr(6)));
 
-left = exp1*exp2*exp3*exp4*exp5*exp6 * q3
+left = exp6 * qend
 
-right =  InvTransM(exp3)*gst1 * InvTransM(g0) * q3
+right = inv(exp5) * inv(exp4) * inv(exp3) * ...
+    inv(exp2) * inv(exp1) *gst1 * inv(g0) * qend
 
 
 % left = exp4*exp5*exp6 * qout
@@ -102,5 +104,5 @@ x = [point1(1) point1_int(1) point2(1) point3(1) point4(1) point_end(1)];
 y = [point1(2) point1_int(2) point2(2) point3(2) point4(2) point_end(2)];
 z = [point1(3) point1_int(3) point2(3) point3(3) point4(3) point_end(3)];
 
-pl = plot(x,z);
+pl = plot3(x,y,z);
 pl.Marker = '*';

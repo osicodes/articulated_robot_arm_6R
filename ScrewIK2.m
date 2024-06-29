@@ -47,7 +47,7 @@ gst = FKinSpace(g0, s, qr); % Target pose transformation
 %% INVERSE
 % ----------------------------
 q6 = [pa(:,6); 1];
-pointOnAxis1 = pa(:,1);
+q1 = pa(:,1);
 q2 = pa(:,2);
 q3 = pa(:,3);
 q4 = pa(:,4);

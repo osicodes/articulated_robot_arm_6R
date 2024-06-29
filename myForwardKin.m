@@ -20,7 +20,7 @@ d1=75.3553; a1=35.3553; a2=80; d4=100; d6 = 10+tip;
 % q5 = -60 to 60 % (180 or -180 will cause singularity)
 % q6 = -180 to 180
 
-qr = [pi/2 pi/3 pi/2 pi/3 -pi/2 0]; 
+qr = [-pi/3 pi/4 pi/4 pi/3 -pi/2 0]; 
 
 % home_pos = [187.8553; 0; 155.3553; 0; 1.5708; 3.1416]
 kk = [80.3521; 50.9937; 180.8569; -1.5708; 2.4758; 0.3082];
@@ -66,7 +66,7 @@ quaternion = QUATERNION(R06);
 x = T06(1,4);
 y = T06(2,4);
 z = T06(3,4);
-positions = myInverseKin6RAnalytical_EULER(x,y,z,phi,th,psi)'
+positions = myInverseKin6RAnalytical_EULER(x,y,z,phi,th,psi)'*180/pi
 
 % qw = quaternion(1);
 % qx = quaternion(2);

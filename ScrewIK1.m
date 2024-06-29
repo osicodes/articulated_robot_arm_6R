@@ -36,15 +36,21 @@ end
 s = [sw;sv];
 
 % qr = [0; 0; 0; 0; 0; 0];
-% qr = [pi/4 -pi/3 -pi/4 0 pi/6 0]';
-qr = [pi/4 0 0 0 0 0]';
+qr = [theta1 theta2 theta3 theta4 theta5 theta6]';
+% qr = [0 0 0 0 pi/6 0]';
 
 g0 = [0 0 1 a1+d4+d6;
     0 -1 0 0;
     1 0 0 d1+a2;
     0 0 0 1];
 
-gst = FKinSpace(g0, s, qr); % Target pose transformation
+% gst = FKinBody(g0, s, qr) % Target pose transformation
+gst = ScrewFK1(g0, s, qr)
+
+% gst = [         0         0    1.0000  50.8600;
+%          0   -1.0000         0         50;
+%     1.0000         0         0  105.4000;
+%          0         0         0    1.0000]
 
 
 %% ------------INVERSE----------------
@@ -59,14 +65,13 @@ q6 = pa(:,6);
 % When theta1 is rotated, q6 will never change and rotate by theta1
 % So to get theta1, move from q6 at home position to q6 at target position
 
-home = q6;  % q6 at home position
 
 P06=gst(1:3,4);
 P05 = P06 - d6*gst(1:3,3); % q6 at target position
 
 target = P05; 
 
-th1p = home;
+th1p = q6;
 th1q = target; 
 th1r = pa(:,1);
 th1omega = sw(:,1);
@@ -99,7 +104,7 @@ rot_z = [cos(theta1) -sin(theta1) 0;...
     sin(theta1)  cos(theta1) 0;...
     0            0           1];
 
-th3p = rot_z*home;
+th3p = rot_z*q6;
 th3q = rot_z*q2;
 th3r = rot_z*pa(:,3);
 th3omega = rot_z*sw(:,3);
@@ -110,17 +115,19 @@ delta_prime_square = delta^2 - norm(th3omega' * (th3p - th3q))^2;
 th3U = th3p - th3r;
 th3V = th3q - th3r;
 
+
 th3u_prime = th3U - th3omega*th3omega'*th3U;
 th3v_prime = th3V - th3omega*th3omega'*th3V;
 
 theta_not = atan2(th3omega'*Vector3Cross(th3u_prime,th3v_prime)',...
     th3u_prime'*th3v_prime);
 
+
 phi_num = round(norm(th3U)^2 + norm(th3V)^2 - delta_prime_square, 4);
 phi_den = round(2 * norm(th3U) * norm(th3V), 4);
 phi = acos(phi_num/phi_den);
 
-theta3 = (theta_not + phi)
+theta3 = (theta_not + phi);
 
 theta3_d = theta3 *180/pi
 % theta3 = theta_not - phi
@@ -128,19 +135,17 @@ theta3_d = theta3 *180/pi
 
 %------------theta2---------------
 
-% Since q4, q5, q6 have same pose, get the orientation of joint 4
-% and multiply the column_z-axis orientation with d4, then subtract from
-% P05 to get actual position of P03
+% Since q4, q5, q6 have same pose
 % --------------
-P03_array = gst * InvTransM(g0) * [q3; 1]; % This can be used if there 
-% is no rotation on theta5
-P03 = P03_array(1:3);
+exp3 = MatrixExp6(VecTose3(s(:, 3) * theta3));
 
 % q7_bar from the article
-q7_bar = target; % i.e. P05
+q7_bar = exp3 * [q4; 1];
 
-th2p = rot_z*q3; 
-th2q = P03;  
+q3_bar = target; % i.e. P05
+
+th2p = rot_z*q7_bar(1:3); 
+th2q = q3_bar;  
 th2r = rot_z*pa(:,2);
 th2omega = rot_z*sw(:,2);
 
@@ -177,11 +182,17 @@ q6_prime = T03 * q6_T;
 r45_T = [pa(:,4); 1];
 r45 = T03 * r45_T;
 
-th45p = q6_prime(1:3)
+th4omega_T = [sw(:,4); 0];
+th4omega_R = T03 * th4omega_T;
+
+th5omega_T = [sw(:,5); 0];
+th5omega_R = T03 * th5omega_T;
+
+th45p = q6_prime(1:3);
 th45q = gst(1:3,4);  
 th45r = r45(1:3);
-th4omega = rot_z*sw(:,4);
-th5omega = rot_z*sw(:,5);
+th4omega = th4omega_R(1:3);
+th5omega = th5omega_R(1:3);
 
 th45U = th45p - th45r;
 th45V = th45q - th45r;
@@ -189,11 +200,11 @@ th45V = th45q - th45r;
 % To define z, define alpha, beta and gamma
 alpha_num = (th4omega'*th5omega)*th4omega'*th45U - th4omega'*th45V;
 alpha_den = (th4omega'*th5omega)^2 - 1;
-alpha = alpha_num/alpha_den;
+alpha = round(alpha_num/alpha_den, 2);
 
 beta_num = (th4omega'*th5omega)*th5omega'*th45V - th5omega'*th45U;
 beta_den = (th4omega'*th5omega)^2 - 1;
-beta = beta_num/beta_den;
+beta = round(beta_num/beta_den, 2);
 
 gamma_square_num = round(norm(th45U)^2 - alpha^2 - beta^2 - ...
     2*alpha*beta*th4omega'*th5omega, 4);
@@ -210,7 +221,9 @@ th45u_prime = th45U - th5omega*th5omega'*th45U;
 z5_prime = z - th5omega*th5omega'*z;
 
 theta5 = round(atan2(th5omega'*Vector3Cross(th45u_prime,z5_prime)',...
-    th45u_prime'*z5_prime)*180/pi, 4)
+    th45u_prime'*z5_prime), 4);
+
+theta5_d = theta5*180/pi
 
 
 % ------------theta4------------
@@ -218,7 +231,43 @@ z4_prime = z - th4omega*th4omega'*z;
 th45v_prime = th45V - th4omega*th4omega'*th45V;
 
 theta4 = round(atan2(th4omega'*Vector3Cross(z4_prime,th45v_prime)',...
-    z4_prime'*th45v_prime)*180/pi, 4)
+    z4_prime'*th45v_prime), 4);
+
+theta4_d = theta4*180/pi
+
+% ------------theta6--------------
+
+th6p = gst(1:3,4);
+
+exp1 = MatrixExp6(VecTose3(s(:, 1) * theta1));
+exp2 = MatrixExp6(VecTose3(s(:, 2) * theta2));
+exp3 = MatrixExp6(VecTose3(s(:, 3) * theta3));
+exp4 = MatrixExp6(VecTose3(s(:, 4) * theta4));
+exp5 = MatrixExp6(VecTose3(s(:, 5) * theta5));
+
+th6q = inv(exp5) * inv(exp4) * inv(exp3) * ...
+    inv(exp2) * inv(exp1) * gst * inv(g0) * [th6p; 1];
+
+r6_T = [pa(:,6); 1];
+r6 = T03 * r6_T;
+
+th6omega_T = [sw(:,6); 0];
+th6omega_R = T03 * th6omega_T;
+
+th6r = r6(1:3);
+th6omega = th6omega_R(1:3);
+
+th6U = th6p - th6r;
+th6V = th6q(1:3) - th6r;
+
+th6u_prime = th6U - th6omega*th6omega'*th6U;
+th6v_prime = th6V - th6omega*th6omega'*th6V;
+
+
+theta6 = round(atan2(th6omega'*Vector3Cross(th6u_prime,th6v_prime)',...
+    th6u_prime'*th6v_prime), 4);
+
+theta6_d = theta6*180/pi
 
 
 
