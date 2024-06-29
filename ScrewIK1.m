@@ -37,7 +37,7 @@ s = [sw;sv];
 
 % qr = [0; 0; 0; 0; 0; 0];
 % qr = [theta1 theta2 theta3 theta4 theta5 theta6]';
-qr = [-pi/3 pi/4 pi/4 pi/3 -pi/2 pi/3]';
+qr = [0 pi/4 0 pi/2 pi/4 0]';
 
 g0 = [0 0 1 a1+d4+d6;
     0 -1 0 0;
@@ -250,14 +250,14 @@ T05 = exp1*exp2*exp3*exp4*exp5;
 th6q =  inv(exp5) * inv(exp4) * inv(exp3) * ...
     inv(exp2) * inv(exp1) * gst *  inv(g0) *  [th6p; 1];
 
-r6_T = [pa(:,6); 1];
-r6 = T03 * r6_T;
+% r6_T = [pa(:,6); 1];
+% r6 = T03 * r6_T;
+% 
+% th6omega_T = [sw(:,6); 0];
+% th6omega_R = T05 * th6omega_T;
 
-th6omega_T = [sw(:,6); 0];
-th6omega_R = T05 * th6omega_T;
-
-th6r = r6(1:3);
-th6omega = th6omega_R(1:3);
+th6r = pa(:,6); %r6(1:3);
+th6omega = sw(:,6); %th6omega_R(1:3);
 
 th6U = th6p - th6r;
 th6V = th6q(1:3) - th6r;
