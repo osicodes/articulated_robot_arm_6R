@@ -1,3 +1,4 @@
+% ORIGINAL VERSION
 %   Reference: 
 %   [1] Liao Z, Jiang G, Zhao F, Mei X, Yue Y. A novel solution of 
 %       inverse kinematic for 6R robot manipulator with offset joint based 
@@ -61,6 +62,9 @@ q3 = pa(:,3);
 q4 = pa(:,4);
 q6 = pa(:,6);
 
+
+% ----------theta1----------------
+% Apply subproblem 1
 % Remember, q4, q5, q6 are same points.
 % When theta1 is rotated, q6 will never change and rotate by theta1
 % So to get theta1, move from q6 at home position to q6 at target position
